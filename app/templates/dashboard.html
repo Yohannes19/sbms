@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+  <!-- Total Tenants -->
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="text-sm text-gray-500">Tenants</h3>
+    <p class="text-2xl font-bold text-blue-600">120</p>
+  </div>
+
+  <!-- Active Contracts -->
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="text-sm text-gray-500">Active Contracts</h3>
+    <p class="text-2xl font-bold text-green-600">85</p>
+  </div>
+
+  <!-- Occupied Units -->
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="text-sm text-gray-500">Occupied Units</h3>
+    <p class="text-2xl font-bold text-purple-600">90%</p>
+  </div>
+
+  <!-- Pending Payments -->
+  <div class="bg-white p-4 rounded-xl shadow">
+    <h3 class="text-sm text-gray-500">Pending Payments</h3>
+    <p class="text-2xl font-bold text-red-600">15</p>
+  </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="bg-white rounded-xl shadow p-6">
+  <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
+  <table class="w-full text-left border-collapse">
+    <thead>
+      <tr class="text-gray-500 text-sm border-b">
+        <th class="py-2">Tenant</th>
+        <th class="py-2">Action</th>
+        <th class="py-2">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b">
+        <td class="py-2">John Doe</td>
+        <td class="py-2">Signed Contract</td>
+        <td class="py-2">2025-08-25</td>
+      </tr>
+      <tr class="border-b">
+        <td class="py-2">Jane Smith</td>
+        <td class="py-2">Payment Received</td>
+        <td class="py-2">2025-08-26</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
