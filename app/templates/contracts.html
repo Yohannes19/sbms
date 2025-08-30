@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-6">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold">Contracts</h1>
+    <a href="/contracts/ui/new" class="bg-blue-600 text-white px-3 py-1 rounded">New Contract</a>
+  </div>
+
+  <table class="min-w-full bg-white shadow rounded">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="p-2 text-left">ID</th>
+        <th class="p-2 text-left">Tenant</th>
+        <th class="p-2 text-left">Room</th>
+        <th class="p-2 text-left">Start</th>
+        <th class="p-2 text-left">End</th>
+        <th class="p-2 text-left">Rent</th>
+        <th class="p-2 text-left">Active</th>
+        <th class="p-2 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in contracts %}
+      <tr class="border-t">
+        <td class="p-2">{{ c.id }}</td>
+        <td class="p-2">{{ c.tenant.name if c.tenant else c.tenant_id }}</td>
+        <td class="p-2">{{ c.room.number if c.room else c.room_id }}</td>
+        <td class="p-2">{{ c.start_date }}</td>
+        <td class="p-2">{{ c.end_date or '-' }}</td>
+        <td class="p-2">{{ c.rent_amount }}</td>
+        <td class="p-2">{{ 'Yes' if c.active else 'No' }}</td>
+        <td class="p-2">
+          <a href="/contracts/ui/{{ c.id }}" class="text-blue-600 mr-2">View</a>
+          <a href="/contracts/ui/{{ c.id }}/edit" class="text-yellow-600 mr-2">Edit</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td class="p-4" colspan="8">No contracts yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
