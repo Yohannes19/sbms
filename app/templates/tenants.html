@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-6">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold">Tenants</h1>
+    <a href="/tenants/ui/new" class="bg-blue-600 text-white px-3 py-1 rounded">New Tenant</a>
+  </div>
+
+  <div class="bg-white rounded shadow">
+    <table class="min-w-full">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 text-left">ID</th>
+          <th class="p-2 text-left">Name</th>
+          <th class="p-2 text-left">Email</th>
+          <th class="p-2 text-left">Phone</th>
+          <th class="p-2 text-left">Created</th>
+          <th class="p-2 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in tenants %}
+        <tr class="border-t">
+          <td class="p-2">{{ t.id }}</td>
+          <td class="p-2"><a href="/tenants/ui/{{ t.id }}" class="text-blue-600">{{ t.name }}</a></td>
+          <td class="p-2">{{ t.email or '-' }}</td>
+          <td class="p-2">{{ t.phone or '-' }}</td>
+          <td class="p-2">{{ t.created_at }}</td>
+          <td class="p-2">
+            <a href="/tenants/ui/{{ t.id }}/edit" class="text-yellow-600 mr-2">Edit</a>
+            <a href="#" data-id="{{ t.id }}" class="delete-tenant text-red-600">Delete</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td class="p-4" colspan="6">No tenants found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.delete-tenant').forEach(btn=>{
+  btn.addEventListener('click', async (e)=>{
+    e.preventDefault();
+    if(!confirm('Delete tenant?')) return;
+    const id = btn.dataset.id;
+    const res = await fetch('/tenants/' + id, { method: 'DELETE' });
+    if (res.status === 204) location.reload();
+    else {
+      const err = await res.json();
+      alert(err.detail || 'Delete failed');
+    }
+  });
+});
+</script>
+{% endblock %}

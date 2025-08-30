@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-6 max-w-2xl">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold">{{ tenant.name }}</h1>
+    <div>
+      <a href="/tenants/ui/{{ tenant.id }}/edit" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</a>
+      <a href="/tenants/ui" class="px-3 py-1 border rounded">Back</a>
+    </div>
+  </div>
+
+  <dl class="bg-white p-4 rounded shadow grid grid-cols-2 gap-4">
+    <div>
+      <dt class="text-sm text-gray-500">Email</dt>
+      <dd class="font-medium">{{ tenant.email or '-' }}</dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500">Phone</dt>
+      <dd class="font-medium">{{ tenant.phone or '-' }}</dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500">Created</dt>
+      <dd>{{ tenant.created_at }}</dd>
+    </div>
+  </dl>
+</div>
+{% endblock %}

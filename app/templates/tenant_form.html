@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-6 max-w-2xl">
+  <h1 class="text-2xl font-bold mb-4">{% if action=='create' %}New Tenant{% else %}Edit Tenant{% endif %}</h1>
+
+  <form id="tenantForm" class="bg-white p-4 rounded shadow space-y-4">
+    <div>
+      <label class="block text-sm text-gray-600">Name</label>
+      <input type="text" name="name" id="name" class="w-full border p-2 rounded" value="{{ tenant.name if tenant else '' }}" required>
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600">Email</label>
+      <input type="email" name="email" id="email" class="w-full border p-2 rounded" value="{{ tenant.email if tenant else '' }}">
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600">Phone</label>
+      <input type="text" name="phone" id="phone" class="w-full border p-2 rounded" value="{{ tenant.phone if tenant else '' }}">
+    </div>
+
+    <div class="flex space-x-2">
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Save</button>
+      <a href="/tenants/ui" class="px-4 py-2 border rounded">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+<script>
+const form = document.getElementById('tenantForm');
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(form).entries());
+  let url = '/tenants';
+  let method = 'POST';
+  {% if action=='edit' %}
+    url = '/tenants/{{ tenant.id }}';
+    method = 'PUT';
+  {% endif %}
+  const res = await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (res.ok) {
+    const body = await res.json();
+    window.location.href = '/tenants/ui/' + body.id;
+  } else {
+    const err = await res.json();
+    alert(err.detail || 'Save failed');
+  }
+});
+</script>

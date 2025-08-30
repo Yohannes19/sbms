@@ -4,13 +4,13 @@
 <div class="p-6 max-w-3xl">
   <div class="flex items-center justify-between mb-4">
     <h1 class="text-2xl font-bold">Contract #{{ contract.id }}</h1>
-    <div>
-      <a href="/contracts/ui/{{ contract.id }}/edit" class="bg-yellow-500 text-white px-3 py-1 rounded mr-2">Edit</a>
+    <div class="flex items-center space-x-2">
+      <a href="/contracts/ui/{{ contract.id }}/edit" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</a>
       <button id="deleteBtn" class="bg-red-600 text-white px-3 py-1 rounded">Delete</button>
     </div>
   </div>
 
-  <dl class="grid grid-cols-2 gap-4 bg-white p-4 rounded shadow">
+  <dl class="grid grid-cols-2 gap-4 bg-white p-4 rounded shadow mb-6">
     <div>
       <dt class="text-sm text-gray-500">Tenant</dt>
       <dd class="font-medium">{{ contract.tenant.name if contract.tenant else contract.tenant_id }}</dd>
@@ -35,7 +35,48 @@
       <dt class="text-sm text-gray-500">Active</dt>
       <dd>{{ 'Yes' if contract.active else 'No' }}</dd>
     </div>
+
+    <div class="col-span-2">
+      <dt class="text-sm text-gray-500">Total Paid</dt>
+      <dd class="font-medium text-green-600">{{ total_paid }}</dd>
+    </div>
   </dl>
+
+  <div class="mb-6">
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-lg font-semibold">Payments</h2>
+      <a href="/payments/ui/new?contract_id={{ contract.id }}" class="bg-blue-600 text-white px-3 py-1 rounded">Record Payment</a>
+    </div>
+
+    <div class="bg-white rounded shadow">
+      <table class="min-w-full">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-2 text-left">ID</th>
+            <th class="p-2 text-left">Amount</th>
+            <th class="p-2 text-left">Paid At</th>
+            <th class="p-2 text-left">Method</th>
+            <th class="p-2 text-left">Note</th>
+            <th class="p-2 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in payments %}
+          <tr class="border-t">
+            <td class="p-2">{{ p.id }}</td>
+            <td class="p-2">{{ p.amount }}</td>
+            <td class="p-2">{{ p.paid_at }}</td>
+            <td class="p-2">{{ p.method or '-' }}</td>
+            <td class="p-2">{{ p.note or '' }}</td>
+            <td class="p-2"><a href="/payments/ui/{{ p.id }}" class="text-blue-600">View</a></td>
+          </tr>
+          {% else %}
+          <tr><td class="p-4" colspan="6">No payments recorded for this contract.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 {% endblock %}
 

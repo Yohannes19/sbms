@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-6">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold">Rooms</h1>
+    <a href="/rooms/ui/new" class="bg-blue-600 text-white px-3 py-1 rounded">New Room</a>
+  </div>
+
+  <div class="bg-white rounded shadow">
+    <table class="min-w-full">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 text-left">ID</th>
+          <th class="p-2 text-left">Number</th>
+          <th class="p-2 text-left">Floor</th>
+          <th class="p-2 text-left">Capacity</th>
+          <th class="p-2 text-left">Active</th>
+          <th class="p-2 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rooms %}
+        <tr class="border-t">
+          <td class="p-2">{{ r.id }}</td>
+          <td class="p-2"><a href="/rooms/ui/{{ r.id }}" class="text-blue-600">{{ r.number }}</a></td>
+          <td class="p-2">{{ r.floor or '-' }}</td>
+          <td class="p-2">{{ r.capacity }}</td>
+          <td class="p-2">{{ 'Yes' if r.active else 'No' }}</td>
+          <td class="p-2">
+            <a href="/rooms/ui/{{ r.id }}/edit" class="text-yellow-600 mr-2">Edit</a>
+            <a href="#" data-id="{{ r.id }}" class="delete-room text-red-600">Delete</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td class="p-4" colspan="6">No rooms found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.delete-room').forEach(btn=>{
+  btn.addEventListener('click', async (e)=>{
+    e.preventDefault();
+    if(!confirm('Delete room?')) return;
+    const id = btn.dataset.id;
+    const res = await fetch('/rooms/' + id, { method: 'DELETE' });
+    if (res.status === 204) location.reload();
+    else {
+      const err = await res.json();
+      alert(err.detail || 'Delete failed');
+    }
+  });
+});
+</script>
+{% endblock %}

@@ -4,9 +4,10 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.db.session import get_db
-from app.models import Contract, Tenant, Room
+from app.models import Contract, Tenant, Room, Payment
 from app.schemas import ContractCreate, ContractRead, ContractUpdate
 import app.services.contracts as svc
+import app.services.payments as payments_svc
 
 templates = Jinja2Templates(directory="app/templates")
 
@@ -29,7 +30,15 @@ def contract_detail_ui(contract_id: int, request: Request, db: Session = Depends
     contract = svc.get_contract(db, contract_id)
     if not contract:
         raise HTTPException(status_code=404, detail="Contract not found")
-    return templates.TemplateResponse("contract_detail.html", {"request": request, "contract": contract})
+
+    # payments for this contract and total paid
+    payments = db.query(Payment).filter(Payment.contract_id == contract.id).order_by(Payment.paid_at.desc()).all()
+    total_paid = payments_svc.total_paid_for_contract(db, contract.id)
+
+    return templates.TemplateResponse(
+        "contract_detail.html",
+        {"request": request, "contract": contract, "payments": payments, "total_paid": total_paid}
+    )
 
 @router.get("/ui/{contract_id}/edit")
 def contract_edit_ui(contract_id: int, request: Request, db: Session = Depends(get_db)):

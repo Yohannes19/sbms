@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-6 max-w-2xl">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold">Room {{ room.number }}</h1>
+    <div>
+      <a href="/rooms/ui/{{ room.id }}/edit" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</a>
+      <a href="/rooms/ui" class="px-3 py-1 border rounded">Back</a>
+    </div>
+  </div>
+
+  <dl class="bg-white p-4 rounded shadow grid grid-cols-2 gap-4">
+    <div>
+      <dt class="text-sm text-gray-500">Number</dt>
+      <dd class="font-medium">{{ room.number }}</dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500">Floor</dt>
+      <dd class="font-medium">{{ room.floor or '-' }}</dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500">Capacity</dt>
+      <dd class="font-medium">{{ room.capacity }}</dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500">Active</dt>
+      <dd class="font-medium">{{ 'Yes' if room.active else 'No' }}</dd>
+    </div>
+  </dl>
+</div>
+{% endblock %}

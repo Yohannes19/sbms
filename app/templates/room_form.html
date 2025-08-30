@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-6 max-w-2xl">
+  <h1 class="text-2xl font-bold mb-4">{% if action=='create' %}New Room{% else %}Edit Room{% endif %}</h1>
+
+  <form id="roomForm" class="bg-white p-4 rounded shadow space-y-4">
+    <div>
+      <label class="block text-sm text-gray-600">Number</label>
+      <input type="text" name="number" id="number" class="w-full border p-2 rounded" value="{{ room.number if room else '' }}" required>
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600">Floor</label>
+      <input type="text" name="floor" id="floor" class="w-full border p-2 rounded" value="{{ room.floor if room else '' }}">
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600">Capacity</label>
+      <input type="number" name="capacity" id="capacity" class="w-full border p-2 rounded" value="{{ room.capacity if room else 1 }}">
+    </div>
+
+    <div>
+      <label class="inline-flex items-center">
+        <input type="checkbox" name="active" id="active" class="form-checkbox" {% if room and room.active %}checked{% endif %}>
+        <span class="ml-2 text-sm">Active</span>
+      </label>
+    </div>
+
+    <div class="flex space-x-2">
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Save</button>
+      <a href="/rooms/ui" class="px-4 py-2 border rounded">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+<script>
+const form = document.getElementById('roomForm');
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(form).entries());
+  data.active = document.getElementById('active').checked;
+  if (data.capacity) data.capacity = Number(data.capacity);
+
+  let url = '/rooms';
+  let method = 'POST';
+  {% if action=='edit' %}
+    url = '/rooms/{{ room.id }}';
+    method = 'PUT';
+  {% endif %}
+  const res = await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (res.ok) {
+    const body = await res.json();
+    window.location.href = '/rooms/ui/' + body.id;
+  } else {
+    const err = await res.json();
+    alert(err.detail || 'Save failed');
+  }
+});
+</script>

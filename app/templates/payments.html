@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-6">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold">Payments</h1>
+    <a href="/payments/ui/new" class="bg-blue-600 text-white px-3 py-1 rounded">Record Payment</a>
+  </div>
+
+  <table class="min-w-full bg-white shadow rounded">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="p-2 text-left">ID</th>
+        <th class="p-2 text-left">Contract</th>
+        <th class="p-2 text-left">Amount</th>
+        <th class="p-2 text-left">Paid At</th>
+        <th class="p-2 text-left">Method</th>
+        <th class="p-2 text-left">Note</th>
+        <th class="p-2 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in payments %}
+      <tr class="border-t">
+        <td class="p-2">{{ p.id }}</td>
+        <td class="p-2"><a href="/contracts/ui/{{ p.contract_id }}" class="text-blue-600">#{{ p.contract_id }}</a></td>
+        <td class="p-2">{{ p.amount }}</td>
+        <td class="p-2">{{ p.paid_at }}</td>
+        <td class="p-2">{{ p.method or '-' }}</td>
+        <td class="p-2">{{ p.note or '' }}</td>
+        <td class="p-2">
+          <a href="/payments/ui/{{ p.id }}" class="text-blue-600 mr-2">View</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td class="p-4" colspan="7">No payments found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

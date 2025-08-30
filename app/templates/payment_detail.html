@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-6 max-w-2xl">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold">Payment #{{ payment.id }}</h1>
+    <div>
+      <a href="/payments/ui" class="px-3 py-1 border rounded">Back</a>
+    </div>
+  </div>
+
+  <dl class="bg-white p-4 rounded shadow grid grid-cols-2 gap-4">
+    <div>
+      <dt class="text-sm text-gray-500">Contract</dt>
+      <dd class="font-medium"><a href="/contracts/ui/{{ payment.contract_id }}" class="text-blue-600">#{{ payment.contract_id }}</a></dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500">Amount</dt>
+      <dd class="font-medium">{{ payment.amount }}</dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500">Paid At</dt>
+      <dd>{{ payment.paid_at }}</dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500">Method</dt>
+      <dd>{{ payment.method or '-' }}</dd>
+    </div>
+    <div class="col-span-2">
+      <dt class="text-sm text-gray-500">Note</dt>
+      <dd>{{ payment.note or '' }}</dd>
+    </div>
+  </dl>
+</div>
+{% endblock %}
