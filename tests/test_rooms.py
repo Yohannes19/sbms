@@ -19,10 +19,31 @@ def session():
         db.close()
 
 def test_crud_room(session):
-    payload = RoomCreate(number="301", floor="3", capacity=2, active=True)
+    payload = RoomCreate(
+        number="301",
+        floor="3",
+        capacity=2,
+        active=True,
+        title="Corner Suite",
+        description="Large room with view",
+        bed_count=2,
+        max_occupancy=3,
+        sq_meters=35.5,
+        price=99.99,
+        deposit_amount=200.00,
+        has_ac=True,
+        private_bath=True,
+        accessible=False,
+        amenities=["wifi","tv"],
+        tags=["suite","corner"],
+        images=["/static/img/room301.jpg"],
+        available=True
+    )
     r = create_room(session, payload)
     assert r.id is not None
     assert r.number == "301"
+    assert r.title == "Corner Suite"
+    assert r.amenities and "wifi" in r.amenities
 
     r2 = get_room(session, r.id)
     assert r2.floor == "3"

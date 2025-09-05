@@ -1,20 +1,17 @@
-<div class="w-full bg-[#023859] text-white shadow flex items-center justify-between px-6 py-3">
-  <!-- Search -->
-  <input type="text" placeholder="Search..."
-         class="bg-[#011C40] border border-[#26658C] rounded px-3 py-1 text-sm focus:outline-none focus:ring focus:ring-[#54ACBF] w-64">
-
-  <!-- Actions -->
-  <div class="flex items-center space-x-6">
-    <!-- Notifications -->
-    <button class="relative">
-      🔔
-      <span class="absolute -top-1 -right-1 bg-[#54ACBF] text-black text-xs w-4 h-4 flex items-center justify-center rounded-full">3</span>
-    </button>
-
-    <!-- Profile -->
-    <div class="flex items-center space-x-2 cursor-pointer">
-      <img src="https://ui-avatars.com/api/?name=Admin&background=54ACBF&color=fff" class="w-8 h-8 rounded-full" />
-      <span class="text-sm font-medium">Admin</span>
-    </div>
+<nav class="bg-white border-b p-4 flex items-center justify-between">
+  <div class="flex items-center space-x-4">
+    <a href="/" class="text-lg font-semibold">Dashboard</a>
   </div>
-</div>
+
+  <div id="nav-right" class="flex items-center space-x-4">
+    {% if current_user %}
+    <div class="flex items-center space-x-2">
+      <span class="text-sm font-medium">{{ current_user.username }}</span>
+      <a href="/auth/logout" class="px-3 py-1 border rounded text-sm">Logout</a>
+    </div>
+    {% else %}
+    <a id="nav-login" href="/auth/login" class="text-sm">Sign in</a>
+    <a id="nav-register" href="/auth/register" class="text-sm">Register</a>
+    {% endif %}
+  </div>
+</nav>

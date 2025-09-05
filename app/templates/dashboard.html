@@ -1,56 +1,86 @@
 {% extends "base.html" %}
+
 {% block content %}
-
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-  <!-- Total Tenants -->
-  <div class="bg-white p-4 rounded-xl shadow">
-    <h3 class="text-sm text-gray-500">Tenants</h3>
-    <p class="text-2xl font-bold text-blue-600">120</p>
+<div class="p-6 max-w-4xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold">Dashboard</h1>
+    {% if current_user %}
+    <div class="flex items-center space-x-3">
+      <span class="text-sm font-medium">Signed in as {{ current_user.username }}</span>
+      <a href="/auth/logout" class="px-3 py-1 border rounded text-sm">Logout</a>
+    </div>
+    {% endif %}
   </div>
 
-  <!-- Active Contracts -->
-  <div class="bg-white p-4 rounded-xl shadow">
-    <h3 class="text-sm text-gray-500">Active Contracts</h3>
-    <p class="text-2xl font-bold text-green-600">85</p>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <!-- Total Tenants -->
+    <div class="bg-white p-4 rounded-xl shadow">
+      <h3 class="text-sm text-gray-500">Tenants</h3>
+      <p class="text-2xl font-bold text-blue-600">120</p>
+    </div>
+
+    <!-- Active Contracts -->
+    <div class="bg-white p-4 rounded-xl shadow">
+      <h3 class="text-sm text-gray-500">Active Contracts</h3>
+      <p class="text-2xl font-bold text-green-600">85</p>
+    </div>
+
+    <!-- Occupied Units -->
+    <div class="bg-white p-4 rounded-xl shadow">
+      <h3 class="text-sm text-gray-500">Occupied Units</h3>
+      <p class="text-2xl font-bold text-purple-600">90%</p>
+    </div>
+
+    <!-- Pending Payments -->
+    <div class="bg-white p-4 rounded-xl shadow">
+      <h3 class="text-sm text-gray-500">Pending Payments</h3>
+      <p class="text-2xl font-bold text-red-600">15</p>
+    </div>
   </div>
 
-  <!-- Occupied Units -->
-  <div class="bg-white p-4 rounded-xl shadow">
-    <h3 class="text-sm text-gray-500">Occupied Units</h3>
-    <p class="text-2xl font-bold text-purple-600">90%</p>
+  <!-- Recent Activity -->
+  <div class="bg-white rounded-xl shadow p-6">
+    <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="text-gray-500 text-sm border-b">
+          <th class="py-2">Tenant</th>
+          <th class="py-2">Action</th>
+          <th class="py-2">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b">
+          <td class="py-2">John Doe</td>
+          <td class="py-2">Signed Contract</td>
+          <td class="py-2">2025-08-25</td>
+        </tr>
+        <tr class="border-b">
+          <td class="py-2">Jane Smith</td>
+          <td class="py-2">Payment Received</td>
+          <td class="py-2">2025-08-26</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <!-- Pending Payments -->
-  <div class="bg-white p-4 rounded-xl shadow">
-    <h3 class="text-sm text-gray-500">Pending Payments</h3>
-    <p class="text-2xl font-bold text-red-600">15</p>
-  </div>
+  <section class="bg-white rounded shadow p-4 mb-6">
+    <h2 class="text-lg font-semibold mb-3">Profiles</h2>
+    <div class="divide-y">
+      {% for u in users %}
+      <div class="py-3 flex items-center justify-between">
+        <div>
+          <div class="font-medium">{{ u.username }}</div>
+          <div class="text-sm text-gray-500">{{ u.email or '-' }}</div>
+        </div>
+        <div class="text-sm text-gray-600">ID: {{ u.id }}</div>
+      </div>
+      {% else %}
+      <div class="py-3 text-gray-500">No users found.</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- other dashboard widgets can go here -->
 </div>
-
-<!-- Recent Activity -->
-<div class="bg-white rounded-xl shadow p-6">
-  <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
-  <table class="w-full text-left border-collapse">
-    <thead>
-      <tr class="text-gray-500 text-sm border-b">
-        <th class="py-2">Tenant</th>
-        <th class="py-2">Action</th>
-        <th class="py-2">Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-b">
-        <td class="py-2">John Doe</td>
-        <td class="py-2">Signed Contract</td>
-        <td class="py-2">2025-08-25</td>
-      </tr>
-      <tr class="border-b">
-        <td class="py-2">Jane Smith</td>
-        <td class="py-2">Payment Received</td>
-        <td class="py-2">2025-08-26</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
 {% endblock %}

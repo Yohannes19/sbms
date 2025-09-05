@@ -3,7 +3,7 @@
 {% block content %}
 <div class="p-6 max-w-2xl">
   <div class="flex items-center justify-between mb-4">
-    <h1 class="text-2xl font-bold">Room {{ room.number }}</h1>
+    <h1 class="text-2xl font-bold">Room {{ room.number }} {% if room.title %}— {{ room.title }}{% endif %}</h1>
     <div>
       <a href="/rooms/ui/{{ room.id }}/edit" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</a>
       <a href="/rooms/ui" class="px-3 py-1 border rounded">Back</a>
@@ -19,13 +19,58 @@
       <dt class="text-sm text-gray-500">Floor</dt>
       <dd class="font-medium">{{ room.floor or '-' }}</dd>
     </div>
+
     <div>
       <dt class="text-sm text-gray-500">Capacity</dt>
       <dd class="font-medium">{{ room.capacity }}</dd>
     </div>
     <div>
-      <dt class="text-sm text-gray-500">Active</dt>
-      <dd class="font-medium">{{ 'Yes' if room.active else 'No' }}</dd>
+      <dt class="text-sm text-gray-500">Beds</dt>
+      <dd class="font-medium">{{ room.bed_count or '-' }}</dd>
+    </div>
+
+    <div>
+      <dt class="text-sm text-gray-500">Sq meters</dt>
+      <dd class="font-medium">{{ room.sq_meters or '-' }}</dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500">Max occupancy</dt>
+      <dd class="font-medium">{{ room.max_occupancy or '-' }}</dd>
+    </div>
+
+    <div>
+      <dt class="text-sm text-gray-500">Price</dt>
+      <dd class="font-medium">{{ room.price or '-' }}</dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500">Deposit</dt>
+      <dd class="font-medium">{{ room.deposit_amount or '-' }}</dd>
+    </div>
+
+    <div>
+      <dt class="text-sm text-gray-500">Features</dt>
+      <dd class="font-medium">
+        {% if room.has_ac %}AC • {% endif %}{% if room.private_bath %}Private bath • {% endif %}{% if room.accessible %}Accessible{% endif %}
+      </dd>
+    </div>
+    <div>
+      <dt class="text-sm text-gray-500">Available</dt>
+      <dd class="font-medium">{{ 'Yes' if room.available else 'No' }}</dd>
+    </div>
+
+    <div class="col-span-2">
+      <dt class="text-sm text-gray-500">Amenities</dt>
+      <dd>{{ room.amenities | join(', ') if room.amenities else '-' }}</dd>
+    </div>
+
+    <div class="col-span-2">
+      <dt class="text-sm text-gray-500">Tags</dt>
+      <dd>{{ room.tags | join(', ') if room.tags else '-' }}</dd>
+    </div>
+
+    <div class="col-span-2">
+      <dt class="text-sm text-gray-500">Description</dt>
+      <dd>{{ room.description or '-' }}</dd>
     </div>
   </dl>
 </div>

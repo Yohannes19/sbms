@@ -1,0 +1,27 @@
+{% extends "auth_base.html" %}
+
+{% block content %}
+<div class="p-6 bg-white rounded shadow">
+  <h1 class="text-2xl font-bold mb-4">Sign in</h1>
+
+  <form method="post" action="/auth/login" class="space-y-4">
+    <div>
+      <label class="block text-sm text-gray-600">Username</label>
+      <input type="text" name="username" id="username" class="w-full border p-2 rounded" required>
+    </div>
+    <div>
+      <label class="block text-sm text-gray-600">Password</label>
+      <input type="password" name="password" id="password" class="w-full border p-2 rounded" required>
+    </div>
+
+    {% if error %}
+    <div class="text-red-600 text-sm">{{ error }}</div>
+    {% endif %}
+
+    <div class="flex space-x-2">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Sign in</button>
+      <a href="/auth/register" class="px-4 py-2 border rounded">Register</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

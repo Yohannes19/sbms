@@ -1,30 +1,81 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="p-6 max-w-2xl">
+<div class="p-6 max-w-3xl">
   <h1 class="text-2xl font-bold mb-4">{% if action=='create' %}New Room{% else %}Edit Room{% endif %}</h1>
 
-  <form id="roomForm" class="bg-white p-4 rounded shadow space-y-4">
+  <form id="roomForm" method="post" action="{% if action=='edit' %}/rooms/ui/{{ room.id }}/edit{% else %}/rooms/ui/new{% endif %}" class="bg-white p-4 rounded shadow space-y-4">
     <div>
       <label class="block text-sm text-gray-600">Number</label>
-      <input type="text" name="number" id="number" class="w-full border p-2 rounded" value="{{ room.number if room else '' }}" required>
+      <input type="text" name="number" id="number" class="w-full border p-2 rounded"
+             value="{{ form.number if form and form.number else (room.number if room else '') }}" required>
     </div>
 
     <div>
-      <label class="block text-sm text-gray-600">Floor</label>
-      <input type="text" name="floor" id="floor" class="w-full border p-2 rounded" value="{{ room.floor if room else '' }}">
+      <label class="block text-sm text-gray-600">Title</label>
+      <input type="text" name="title" id="title" class="w-full border p-2 rounded"
+             value="{{ form.title if form and form.title else (room.title if room else '') }}">
     </div>
 
     <div>
-      <label class="block text-sm text-gray-600">Capacity</label>
-      <input type="number" name="capacity" id="capacity" class="w-full border p-2 rounded" value="{{ room.capacity if room else 1 }}">
+      <label class="block text-sm text-gray-600">Description</label>
+      <textarea name="description" id="description" rows="4" class="w-full border p-2 rounded">{{ form.description if form and form.description else (room.description if room else '') }}</textarea>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4">
+      <div>
+        <label class="block text-sm text-gray-600">Beds</label>
+        <input type="number" name="bed_count" id="bed_count" class="w-full border p-2 rounded"
+               value="{{ form.bed_count if form and form.bed_count else (room.bed_count if room else '') }}">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">Max occupancy</label>
+        <input type="number" name="max_occupancy" id="max_occupancy" class="w-full border p-2 rounded"
+               value="{{ form.max_occupancy if form and form.max_occupancy else (room.max_occupancy if room else '') }}">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">Sq meters</label>
+        <input type="number" step="0.1" name="sq_meters" id="sq_meters" class="w-full border p-2 rounded"
+               value="{{ form.sq_meters if form and form.sq_meters else (room.sq_meters if room else '') }}">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm text-gray-600">Price</label>
+        <input type="number" step="0.01" name="price" id="price" class="w-full border p-2 rounded"
+               value="{{ form.price if form and form.price else (room.price if room else '') }}">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">Deposit</label>
+        <input type="number" step="0.01" name="deposit_amount" id="deposit_amount" class="w-full border p-2 rounded"
+               value="{{ form.deposit_amount if form and form.deposit_amount else (room.deposit_amount if room else '') }}">
+      </div>
+    </div>
+
+    <div class="flex space-x-4">
+      <label class="inline-flex items-center"><input type="checkbox" name="has_ac" id="has_ac" {% if (form and form.has_ac) or (room and room.has_ac) %}checked{% endif %}> <span class="ml-2">AC</span></label>
+      <label class="inline-flex items-center"><input type="checkbox" name="private_bath" id="private_bath" {% if (form and form.private_bath) or (room and room.private_bath) %}checked{% endif %}> <span class="ml-2">Private bath</span></label>
+      <label class="inline-flex items-center"><input type="checkbox" name="accessible" id="accessible" {% if (form and form.accessible) or (room and room.accessible) %}checked{% endif %}> <span class="ml-2">Accessible</span></label>
+      <label class="inline-flex items-center"><input type="checkbox" name="available" id="available" {% if (form and form.available) or (room and room.available) %}checked{% endif %}> <span class="ml-2">Available</span></label>
     </div>
 
     <div>
-      <label class="inline-flex items-center">
-        <input type="checkbox" name="active" id="active" class="form-checkbox" {% if room and room.active %}checked{% endif %}>
-        <span class="ml-2 text-sm">Active</span>
-      </label>
+      <label class="block text-sm text-gray-600">Amenities (comma separated)</label>
+      <input type="text" name="amenities" id="amenities" class="w-full border p-2 rounded"
+             value="{{ form.amenities if form and form.amenities else (room.amenities | join(', ') if room and room.amenities else '') }}">
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600">Tags (comma separated)</label>
+      <input type="text" name="tags" id="tags" class="w-full border p-2 rounded"
+             value="{{ form.tags if form and form.tags else (room.tags | join(', ') if room and room.tags else '') }}">
+    </div>
+
+    <div>
+      <label class="block text-sm text-gray-600">Images (comma separated URLs)</label>
+      <input type="text" name="images" id="images" class="w-full border p-2 rounded"
+             value="{{ form.images if form and form.images else (room.images | join(', ') if room and room.images else '') }}">
     </div>
 
     <div class="flex space-x-2">
@@ -35,31 +86,6 @@
 </div>
 {% endblock %}
 
-<script>
-const form = document.getElementById('roomForm');
-form.addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(form).entries());
-  data.active = document.getElementById('active').checked;
-  if (data.capacity) data.capacity = Number(data.capacity);
-
-  let url = '/rooms';
-  let method = 'POST';
-  {% if action=='edit' %}
-    url = '/rooms/{{ room.id }}';
-    method = 'PUT';
-  {% endif %}
-  const res = await fetch(url, {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  if (res.ok) {
-    const body = await res.json();
-    window.location.href = '/rooms/ui/' + body.id;
-  } else {
-    const err = await res.json();
-    alert(err.detail || 'Save failed');
-  }
-});
-</script>
+{% block scripts %}
+{# you may keep JS for extra UX but keep it optional; server handles form submit already #}
+{% endblock %}

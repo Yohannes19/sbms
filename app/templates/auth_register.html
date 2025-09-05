@@ -1,0 +1,68 @@
+{% extends "auth_base.html" %}
+
+{% block content %}
+<div class="p-6 bg-white rounded shadow">
+  <h1 class="text-2xl font-bold mb-4">Register</h1>
+
+  <form id="registerForm" class="space-y-4">
+    <div>
+      <label class="block text-sm text-gray-600">Username</label>
+      <input type="text" name="username" id="username" class="w-full border p-2 rounded" required>
+    </div>
+    <div>
+      <label class="block text-sm text-gray-600">Email (optional)</label>
+      <input type="email" name="email" id="email" class="w-full border p-2 rounded">
+    </div>
+    <div>
+      <label class="block text-sm text-gray-600">Password</label>
+      <input type="password" name="password" id="password" class="w-full border p-2 rounded" required>
+    </div>
+
+    <div class="flex space-x-2">
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Register</button>
+      <a href="/auth/login" class="px-4 py-2 border rounded">Sign in</a>
+    </div>
+
+    <div id="error" class="text-red-600 text-sm"></div>
+  </form>
+</div>
+
+{% block scripts %}
+<script>
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const payload = {
+    username: document.getElementById('username').value,
+    email: document.getElementById('email').value || undefined,
+    password: document.getElementById('password').value
+  };
+
+  const res = await fetch('/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  const errEl = document.getElementById('error');
+  if (!res.ok) {
+    const j = await res.json().catch(()=>({detail:'Register failed'}));
+    errEl.textContent = j.detail || 'Register failed';
+    return;
+  }
+
+  const tokenRes = await fetch('/auth/token', {
+    method: 'POST',
+    body: new URLSearchParams({ username: payload.username, password: payload.password })
+  });
+
+  if (tokenRes.ok) {
+    const json = await tokenRes.json();
+    localStorage.setItem('access_token', json.access_token);
+    location.href = '/';
+  } else {
+    location.href = '/auth/login';
+  }
+});
+</script>
+{% endblock %}
+{% endblock %}
