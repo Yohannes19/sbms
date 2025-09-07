@@ -6,7 +6,7 @@
     {% if action == 'create' %}New Contract{% else %}Edit Contract #{{ contract.id }}{% endif %}
   </h1>
 
-  <form id="contractForm" class="bg-white p-4 rounded shadow space-y-4">
+  <form method="post" action="{% if action=='edit' %}/contracts/ui/{{ contract.id }}/edit{% else %}/contracts/ui/new{% endif %}" class="bg-white p-4 rounded shadow space-y-4">
     <div>
       <label class="block text-sm text-gray-600">Tenant</label>
       <select name="tenant_id" id="tenant" class="w-full border p-2 rounded">

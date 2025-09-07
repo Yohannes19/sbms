@@ -9,6 +9,8 @@ import app.services.users as users_svc
 from app.schemas.user import UserCreate, UserRead, Token
 from app.core.security import create_access_token, decode_access_token
 from app.core.config import settings
+from app.core.exceptions import RedirectException
+from app.models.user import User
 
 templates = Jinja2Templates(directory="app/templates")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
@@ -46,7 +48,7 @@ def login_ui_post(request: Request, response: Response, form_data: OAuth2Passwor
         httponly=True,
         max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
         samesite="lax",
-        secure=False  # set True in production with HTTPS
+        secure=False # set True in production with HTTPS
     )
     return redirect
 
@@ -88,14 +90,17 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 def require_user_ui(request: Request, db: Session = Depends(get_db)):
     token = request.cookies.get("access_token")
     if not token:
-        # redirect the browser to login
-        raise HTTPException(status_code=status.HTTP_303_SEE_OTHER, headers={"Location": "/auth/login"})
+        # Redirect the browser to login
+        raise RedirectException(path="/auth/login")
+
     try:
         payload = decode_access_token(token)
         user_id = int(payload.get("sub"))
     except Exception:
-        raise HTTPException(status_code=status.HTTP_303_SEE_OTHER, headers={"Location": "/auth/login"})
+        raise RedirectException(path="/auth/login")
+        
     user = users_svc.get_user(db, user_id)
     if not user:
-        raise HTTPException(status_code=status.HTTP_303_SEE_OTHER, headers={"Location": "/auth/login"})
+        raise RedirectException(path="/auth/login")
+        
     return user

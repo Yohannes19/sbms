@@ -1,86 +1,71 @@
 {% extends "base.html" %}
 
+{% block page_title %}Dashboard{% endblock %}
+
 {% block content %}
-<div class="p-6 max-w-4xl mx-auto">
-  <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold">Dashboard</h1>
-    {% if current_user %}
-    <div class="flex items-center space-x-3">
-      <span class="text-sm font-medium">Signed in as {{ current_user.username }}</span>
-      <a href="/auth/logout" class="px-3 py-1 border rounded text-sm">Logout</a>
-    </div>
-    {% endif %}
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-    <!-- Total Tenants -->
-    <div class="bg-white p-4 rounded-xl shadow">
-      <h3 class="text-sm text-gray-500">Tenants</h3>
-      <p class="text-2xl font-bold text-blue-600">120</p>
-    </div>
-
-    <!-- Active Contracts -->
-    <div class="bg-white p-4 rounded-xl shadow">
-      <h3 class="text-sm text-gray-500">Active Contracts</h3>
-      <p class="text-2xl font-bold text-green-600">85</p>
-    </div>
-
-    <!-- Occupied Units -->
-    <div class="bg-white p-4 rounded-xl shadow">
-      <h3 class="text-sm text-gray-500">Occupied Units</h3>
-      <p class="text-2xl font-bold text-purple-600">90%</p>
-    </div>
-
-    <!-- Pending Payments -->
-    <div class="bg-white p-4 rounded-xl shadow">
-      <h3 class="text-sm text-gray-500">Pending Payments</h3>
-      <p class="text-2xl font-bold text-red-600">15</p>
-    </div>
-  </div>
-
-  <!-- Recent Activity -->
-  <div class="bg-white rounded-xl shadow p-6">
-    <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
-    <table class="w-full text-left border-collapse">
-      <thead>
-        <tr class="text-gray-500 text-sm border-b">
-          <th class="py-2">Tenant</th>
-          <th class="py-2">Action</th>
-          <th class="py-2">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="border-b">
-          <td class="py-2">John Doe</td>
-          <td class="py-2">Signed Contract</td>
-          <td class="py-2">2025-08-25</td>
-        </tr>
-        <tr class="border-b">
-          <td class="py-2">Jane Smith</td>
-          <td class="py-2">Payment Received</td>
-          <td class="py-2">2025-08-26</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <section class="bg-white rounded shadow p-4 mb-6">
-    <h2 class="text-lg font-semibold mb-3">Profiles</h2>
-    <div class="divide-y">
-      {% for u in users %}
-      <div class="py-3 flex items-center justify-between">
-        <div>
-          <div class="font-medium">{{ u.username }}</div>
-          <div class="text-sm text-gray-500">{{ u.email or '-' }}</div>
+<div class="p-6 md:p-10 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="card bg-white p-6 flex items-center space-x-4">
+            <div class="flex-shrink-0 bg-blue-100 p-3 rounded-full"><svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></div>
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Total Tenants</h3>
+                <p class="text-3xl font-extrabold text-blue-800 mt-1">120</p>
+            </div>
         </div>
-        <div class="text-sm text-gray-600">ID: {{ u.id }}</div>
-      </div>
-      {% else %}
-      <div class="py-3 text-gray-500">No users found.</div>
-      {% endfor %}
+        <div class="card bg-white p-6 flex items-center space-x-4">
+            <div class="flex-shrink-0 bg-green-100 p-3 rounded-full"><svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 015.618 1.04A12.01 12.01 0 0012 5.055a12.01 12.01 0 00-5.618-1.016z"></path></svg></div>
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Active Contracts</h3>
+                <p class="text-3xl font-extrabold text-green-800 mt-1">85</p>
+            </div>
+        </div>
+        <div class="card bg-white p-6 flex items-center space-x-4">
+            <div class="flex-shrink-0 bg-purple-100 p-3 rounded-full"><svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a2 2 0 012-2h2a2 2 0 012 2v5m-8 0h8"></path></svg></div>
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Occupied Units</h3>
+                <p class="text-3xl font-extrabold text-purple-800 mt-1">90%</p>
+            </div>
+        </div>
+        <div class="card bg-white p-6 flex items-center space-x-4">
+            <div class="flex-shrink-0 bg-red-100 p-3 rounded-full"><svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM12 2a10 10 0 100 20 10 10 0 000-20z"></path></svg></div>
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Pending Payments</h3>
+                <p class="text-3xl font-extrabold text-red-800 mt-1">15</p>
+            </div>
+        </div>
     </div>
-  </section>
 
-  <!-- other dashboard widgets can go here -->
+    <!-- Recent Activity -->
+    <div class="card bg-white p-6 mb-8">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">Recent Activity</h3>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="text-gray-500 uppercase text-xs">
+                    <tr>
+                        <th class="py-3 px-4">Tenant</th>
+                        <th class="py-3 px-4">Action</th>
+                        <th class="py-3 px-4">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-4 px-4 font-medium text-gray-900">John Doe</td>
+                        <td class="py-4 px-4 text-gray-600">Signed New Contract</td>
+                        <td class="py-4 px-4 text-gray-600">2025-08-25</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-4 px-4 font-medium text-gray-900">Jane Smith</td>
+                        <td class="py-4 px-4 text-gray-600">Payment Received</td>
+                        <td class="py-4 px-4 text-gray-600">2025-08-26</td>
+                    </tr>
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-4 px-4 font-medium text-gray-900">Peter Jones</td>
+                        <td class="py-4 px-4 text-gray-600">Room Moved</td>
+                        <td class="py-4 px-4 text-gray-600">2025-08-27</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}

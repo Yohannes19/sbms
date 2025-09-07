@@ -7,7 +7,7 @@ from app.core.config import settings
 # Create engine from settings
 engine = create_engine(
     settings.DATABASE_URL,
-    echo=settings.SQL_ECHO or settings.DEBUG,
+    #echo=settings.SQL_ECHO or settings.DEBUG,
     # only used for SQLite — ignored by Postgres
     connect_args={"check_same_thread": False} if settings.DATABASE_URL.startswith("sqlite") else {}
 )

@@ -1,7 +1,9 @@
 from fastapi import FastAPI, Request, Depends
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from app.core.exceptions import RedirectException 
 
 from app.routes import dashboard
 from app.routes import tenants, contracts, rooms, payments
@@ -12,6 +14,11 @@ from app.models import User
 
 
 app = FastAPI()
+
+@app.exception_handler(RedirectException)
+async def redirect_exception_handler(request: Request, exc: RedirectException):
+    return RedirectResponse(url=exc.headers["Location"])
+
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 

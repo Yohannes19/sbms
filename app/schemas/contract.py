@@ -17,7 +17,14 @@ class ContractBase(BaseModel):
         return v
 
     @model_validator(mode="before")
-    def validate_dates(cls, values: dict):
+    def validate_dates(cls, values):
+        # Check if the input is a dictionary before using .get()
+        if not isinstance(values, dict):
+            # This handles cases where a Pydantic object is being validated,
+            # for example, during a deep copy or other internal processes.
+            return values
+            
+        print("values:", values)
         start = values.get("start_date")
         end = values.get("end_date")
         if start and end and end < start:
@@ -34,7 +41,11 @@ class ContractUpdate(BaseModel):
     active: Optional[bool] = None
 
     @model_validator(mode="before")
-    def validate_dates(cls, values: dict):
+    def validate_dates(cls, values):
+        # Check if the input is a dictionary before using .get()
+        if not isinstance(values, dict):
+            return values
+
         start = values.get("start_date")
         end = values.get("end_date")
         if start and end and end < start:
@@ -46,4 +57,4 @@ class ContractRead(ContractBase):
     active: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True

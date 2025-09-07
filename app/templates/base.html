@@ -1,26 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>SBMS</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/static/css/output.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBMS Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <style>
+        :root {
+            --sidebar-width-expanded: 16rem; /* 256px */
+            --sidebar-width-collapsed: 5rem; /* 80px */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f9;
+        }
+        .sidebar {
+            width: var(--sidebar-width-expanded);
+            transition: width 0.3s ease-in-out;
+        }
+        .main-content {
+            margin-left: var(--sidebar-width-expanded);
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .sidebar.collapsed {
+            width: var(--sidebar-width-collapsed);
+        }
+        .main-content.collapsed {
+            margin-left: var(--sidebar-width-collapsed);
+        }
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-  <div class="flex">
-    <!-- Sidebar -->
-    {% include "sidebar.html" %}
+<body class="bg-gray-100 font-sans text-gray-800">
 
-    <!-- Main area -->
-    <div class="flex-1 flex flex-col">
-      <!-- Navbar -->
-      {% include "navbar.html" %}
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        {% include "sidebar.html" %}
 
-      <!-- Page content -->
-      <main class="p-6">
-        {% block content %}{% endblock %}
-      </main>
+        <!-- Main Content Area -->
+        <div id="main-content" class="main-content flex-1 p-6 transition-all duration-300 ease-in-out">
+            <header class="flex items-center justify-between py-4 px-6 bg-white rounded-xl shadow-sm mb-6 sticky top-0 z-30">
+                <h1 id="page-title" class="text-2xl font-bold text-gray-900">{% block page_title %}{% endblock %}</h1>
+                <div class="relative inline-block text-left" x-data="{ open: false }" @click.away="open = false">
+                    <div>
+                        <button @click="open = !open" type="button" class="flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-gray-900 focus:outline-none" aria-expanded="true" aria-haspopup="true" aria-label="User account menu">
+                            <span class="hidden sm:inline">{{ current_user.username }}</span>
+                            <img class="h-8 w-8 rounded-full object-cover" src="https://placehold.co/100x100/A0AEC0/ffffff?text=U" alt="User Profile">
+                            <svg :class="{'transform rotate-180': open, 'transform rotate-0': !open}" class="h-5 w-5 text-gray-400 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-40">
+                        <div class="py-1" role="none">
+                            <form action="/auth/logout" method="GET">
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1">Sign out</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main id="content-container">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
     </div>
-  </div>
 </body>
 </html>

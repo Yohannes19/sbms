@@ -4,52 +4,112 @@
 <div class="p-6 max-w-2xl">
   <h1 class="text-2xl font-bold mb-4">{% if action=='create' %}New Tenant{% else %}Edit Tenant{% endif %}</h1>
 
-  <form id="tenantForm" class="bg-white p-4 rounded shadow space-y-4">
+  <form method="post" action="{% if action=='edit' %}/tenants/ui/{{ tenant.id }}/edit{% else %}/tenants/ui/new{% endif %}" class="bg-white p-4 rounded shadow space-y-4">
     <div>
-      <label class="block text-sm text-gray-600">Name</label>
-      <input type="text" name="name" id="name" class="w-full border p-2 rounded" value="{{ tenant.name if tenant else '' }}" required>
+      <label class="block text-sm text-gray-600">Full name</label>
+      <input type="text" name="name" value="{{ form.name if form and form.name else (tenant.name if tenant else '') }}" class="w-full border p-2 rounded" required>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm text-gray-600">Email</label>
+        <input type="email" name="email" value="{{ form.email if form and form.email else (tenant.email if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">Phone</label>
+        <input type="text" name="phone" value="{{ form.phone if form and form.phone else (tenant.phone if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4">
+      <div>
+        <label class="block text-sm text-gray-600">DOB</label>
+        <input type="date" name="dob" value="{{ form.dob if form and form.dob else (tenant.dob if tenant and tenant.dob else '') }}" class="w-full border p-2 rounded">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">Gender</label>
+        <input type="text" name="gender" value="{{ form.gender if form and form.gender else (tenant.gender if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">Move-in date</label>
+        <input type="date" name="move_in_date" value="{{ form.move_in_date if form and form.move_in_date else (tenant.move_in_date if tenant and tenant.move_in_date else '') }}" class="w-full border p-2 rounded">
+      </div>
     </div>
 
     <div>
-      <label class="block text-sm text-gray-600">Email</label>
-      <input type="email" name="email" id="email" class="w-full border p-2 rounded" value="{{ tenant.email if tenant else '' }}">
+      <label class="block text-sm text-gray-600">Street</label>
+      <input type="text" name="street" value="{{ form.street if form and form.street else (tenant.street if tenant else '') }}" class="w-full border p-2 rounded">
+    </div>
+
+    <div class="grid grid-cols-3 gap-4">
+      <div>
+        <label class="block text-sm text-gray-600">City</label>
+        <input type="text" name="city" value="{{ form.city if form and form.city else (tenant.city if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">State</label>
+        <input type="text" name="state" value="{{ form.state if form and form.state else (tenant.state if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">Postal code</label>
+        <input type="text" name="postal_code" value="{{ form.postal_code if form and form.postal_code else (tenant.postal_code if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm text-gray-600">Country</label>
+        <input type="text" name="country" value="{{ form.country if form and form.country else (tenant.country if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">ID type</label>
+        <input type="text" name="id_type" value="{{ form.id_type if form and form.id_type else (tenant.id_type if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm text-gray-600">ID number</label>
+        <input type="text" name="id_number" value="{{ form.id_number if form and form.id_number else (tenant.id_number if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">Photo URL</label>
+        <input type="text" name="photo" value="{{ form.photo if form and form.photo else (tenant.photo if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm text-gray-600">Emergency contact</label>
+        <input type="text" name="emergency_contact_name" value="{{ form.emergency_contact_name if form and form.emergency_contact_name else (tenant.emergency_contact_name if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
+      <div>
+        <label class="block text-sm text-gray-600">Emergency phone</label>
+        <input type="text" name="emergency_contact_phone" value="{{ form.emergency_contact_phone if form and form.emergency_contact_phone else (tenant.emergency_contact_phone if tenant else '') }}" class="w-full border p-2 rounded">
+      </div>
     </div>
 
     <div>
-      <label class="block text-sm text-gray-600">Phone</label>
-      <input type="text" name="phone" id="phone" class="w-full border p-2 rounded" value="{{ tenant.phone if tenant else '' }}">
+      <label class="block text-sm text-gray-600">Notes</label>
+      <textarea name="notes" rows="4" class="w-full border p-2 rounded">{{ form.notes if form and form.notes else (tenant.notes if tenant else '') }}</textarea>
     </div>
 
-    <div class="flex space-x-2">
-      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Save</button>
-      <a href="/tenants/ui" class="px-4 py-2 border rounded">Cancel</a>
+    <div>
+      <label class="block text-sm text-gray-600">Metadata (JSON)</label>
+      {# use tenant_data (serializable) for tojson to avoid SQLAlchemy objects in JSON encoding #}
+      <input type="text" name="metadata" value="{{ form.metadata if form and form.metadata else (tenant_data.metadata_json | tojson if tenant_data and tenant_data.metadata_json else '') }}" class="w-full border p-2 rounded">
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <label class="inline-flex items-center">
+        <input type="checkbox" name="is_active" {% if (form and form.is_active) or (tenant and tenant.is_active) %}checked{% endif %}>
+        <span class="ml-2 text-sm">Active</span>
+      </label>
+      <div class="flex-1 text-right">
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Save</button>
+        <a href="/tenants/ui" class="px-4 py-2 border rounded ml-2">Cancel</a>
+      </div>
     </div>
   </form>
 </div>
 {% endblock %}
-
-<script>
-const form = document.getElementById('tenantForm');
-form.addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const data = Object.fromEntries(new FormData(form).entries());
-  let url = '/tenants';
-  let method = 'POST';
-  {% if action=='edit' %}
-    url = '/tenants/{{ tenant.id }}';
-    method = 'PUT';
-  {% endif %}
-  const res = await fetch(url, {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  if (res.ok) {
-    const body = await res.json();
-    window.location.href = '/tenants/ui/' + body.id;
-  } else {
-    const err = await res.json();
-    alert(err.detail || 'Save failed');
-  }
-});
-</script>
